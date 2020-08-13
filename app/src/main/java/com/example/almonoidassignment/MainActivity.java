@@ -31,11 +31,12 @@ import java.util.Scanner;
 
 import static android.widget.Toast.LENGTH_LONG;
 
-public class MainActivity extends AppCompatActivity implements DatePickerDialog.OnDateSetListener {
+public class MainActivity extends AppCompatActivity implements DatePickerDialog.OnDateSetListener, View.OnClickListener {
     Context context;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        context=this;
+        context = this;
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Toolbar toolbar = findViewById(R.id.toolbar);
@@ -43,10 +44,10 @@ public class MainActivity extends AppCompatActivity implements DatePickerDialog.
         setSupportActionBar(toolbar);
         ImageView person_icon = findViewById(R.id.person_imageView);
 
-        LinearLayoutManager layoutManager = new LinearLayoutManager(this){
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this) {
             //@Override
             //public boolean canScrollVertically() {
-                //return false;
+            //return false;
             //}
         };
         String[] questions = {
@@ -82,32 +83,13 @@ public class MainActivity extends AppCompatActivity implements DatePickerDialog.
         });
 
 
-        PersonalInformation pi =new PersonalInformation();
-        pi.nickname = ((EditText) findViewById(R.id.nickname_editText)).getText().toString();
-        pi.about = ((EditText) findViewById(R.id.about_editText)).getText().toString();
-        pi.birthdate = ((EditText) findViewById(R.id.birthdate_editText)).getText().toString();
-        pi.relationshipStatus = ((Spinner) findViewById(R.id.relationship_spinner)).getSelectedItem().toString();
-        pi.hobbies = ((EditText) findViewById(R.id.hobbies_editText)).getText().toString();
-        //Scanner sc = new Scanner(hobbiesAll);
-        //String hobbies[] = new String[];
-        //sc.useDelimiter(",");
-        //int i=-1;
-        //while(sc.hasNext()){
-
-        //}
-        pi.interests = ((EditText) findViewById(R.id.interests_editText)).getText().toString();
         //final String json="{\"Nickname\""+": \""+nickname+"\"}";
-        GsonBuilder builder = new GsonBuilder();
-        builder.setPrettyPrinting();
-        Gson gson = builder.create();
-        final String jsonString = gson.toJson(pi);
-        Button save= findViewById(R.id.save_button);
-        save.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Toast.makeText(context,jsonString,LENGTH_LONG).show();
-            }
-        });
+        //GsonBuilder builder = new GsonBuilder();
+        //builder.setPrettyPrinting();
+        //Gson gson = builder.create();
+        //final String jsonString = gson.toJson(pi);
+        Button save = findViewById(R.id.save_button);
+        save.setOnClickListener(this);
     }
 
     @Override
@@ -118,8 +100,34 @@ public class MainActivity extends AppCompatActivity implements DatePickerDialog.
         c.set(Calendar.DAY_OF_MONTH, dayOfMonth);
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy/MM/dd");
         String currentDateString = DateFormat.getDateInstance(DateFormat.DEFAULT).format(c.getTime());
-        currentDateString=simpleDateFormat.format(c.getTime());
+        currentDateString = simpleDateFormat.format(c.getTime());
         TextView birthdatetextView = findViewById(R.id.birthdate_editText);
         birthdatetextView.setText(currentDateString);
+    }
+
+    @Override
+    public void onClick(View view) {
+        if (view.getId() == R.id.save_button) {
+            PersonalInformation pi = new PersonalInformation();
+            pi.nickname = ((EditText) findViewById(R.id.nickname_editText)).getText().toString();
+            pi.about = ((EditText) findViewById(R.id.about_editText)).getText().toString();
+            pi.birthdate = ((EditText) findViewById(R.id.birthdate_editText)).getText().toString();
+            pi.relationshipStatus = ((Spinner) findViewById(R.id.relationship_spinner)).getSelectedItem().toString();
+            pi.hobbies = ((EditText) findViewById(R.id.hobbies_editText)).getText().toString();
+            //Scanner sc = new Scanner(hobbiesAll);
+            //String hobbies[] = new String[];
+            //sc.useDelimiter(",");
+            //int i=-1;
+            //while(sc.hasNext()){
+
+            //}
+            pi.interests = ((EditText) findViewById(R.id.interests_editText)).getText().toString();
+            GsonBuilder builder = new GsonBuilder();
+            builder.setPrettyPrinting();
+            Gson gson = builder.create();
+            final String jsonString = gson.toJson(pi);
+            Toast.makeText(context, jsonString, LENGTH_LONG).show();
+        }
+
     }
 }
